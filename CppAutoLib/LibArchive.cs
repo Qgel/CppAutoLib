@@ -1,85 +1,78 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Security.Cryptography;
+using System.Text;
 
 namespace CppAutoLib
 {
 
     public class LibArchive
     {
+        /// <summary>
+        /// "!<arch>\x0a"
+        /// </summary>
+        private static ulong GlobalHeaderValue = 0x0a3e686372613c21;
 
-        private static byte[] GlobalHeader = new byte[] { (byte)'!', (byte)'<', (byte)'a', (byte)'r', (byte)'c', (byte)'h', (byte)'>', 0x0A };
+        private readonly BinaryReader _reader;
 
         public bool IsValid { get; private set; }
 
-        public List<string> MangledNames { get; private set; } = new List<string>();
+        public List<string> MangledNames { get; private set; }
 
-        private string ReadCString(BinaryReader reader)
+        private void ReadSymbolNames()
         {
-            string ret = "";
-            byte c = 0;
-            while ((c = reader.ReadByte()) != 0)
-                ret += (char) c;
-            return ret;
+            // skip irrelevant parts of archive file header
+            SkipBytes(48);
+            int size = ReadSize();
+            SkipBytes(2);
+            // skip archive names
+            var archiveNamesSize = _reader.ReadInt32() * 4;
+            size -= 4 + archiveNamesSize;
+            SkipBytes(archiveNamesSize);
+            int symbolCount = _reader.ReadInt32();
+            size -= 4 + (symbolCount*2);
+            // skip symbol <-> archive matchings
+            SkipBytes(symbolCount*2);
+            // size has the remaining bytes in the second archive file, only containing symbol names
+            var rawSymbolNames = _reader.ReadBytes(size);
+
+            // read symbol names as 0-terminated c strings from rawSymbolNames
+            MangledNames = new List<string>(symbolCount);
+            var curString = new StringBuilder();
+            int p = 0;
+            for (int i = 0; i < symbolCount; i++)
+            {
+                byte b;
+                while ((b = rawSymbolNames[p++]) != 0)
+                    curString.Append((char) b);
+                MangledNames.Add(curString.ToString());
+                curString.Clear();
+            }
         }
 
-        private List<string> ParseNames(BinaryReader reader)
+        private int ReadSize()
         {
-            reader.BaseStream.Seek(reader.ReadUInt32()*4, SeekOrigin.Current);
-
-            uint count = reader.ReadUInt32();
-            reader.BaseStream.Seek(count * 2, SeekOrigin.Current);
-
-            List<string> ret = new List<string>((int)count);
-            for(int i = 0; i < count; i++) 
-                ret.Add(ReadCString(reader));
-
-            return ret;
+            return int.Parse(Encoding.ASCII.GetString(_reader.ReadBytes(10)));
         }
 
-        private void ProcessFile(BinaryReader reader, bool extractNames)
+        private void SkipBytes(int num)
         {
-            // Members aligned on even boundries
-            if (reader.BaseStream.Position % 2 != 0 && reader.ReadByte() != (byte)'\n')
-                return;
-
-            // Header
-            string name = System.Text.Encoding.ASCII.GetString(reader.ReadBytes(16)).TrimEnd();
-
-            if (name != "/")
-                return;
-
-            reader.BaseStream.Seek(32, SeekOrigin.Current);
-            int size = int.Parse(System.Text.Encoding.ASCII.GetString(reader.ReadBytes(10)));
-            reader.BaseStream.Seek(2, SeekOrigin.Current);
-
-            if (extractNames)
-            {
-                MangledNames.AddRange(ParseNames(reader));
-
-            }
-            else
-            {
-                reader.BaseStream.Seek(size, SeekOrigin.Current);
-            }
-
+            _reader.BaseStream.Seek(num, SeekOrigin.Current);
         }
 
         public LibArchive(string path)
         {
             IsValid = false;
-            var reader = new BinaryReader(File.OpenRead(path));
-            var header = reader.ReadBytes(8);
-            if (!header.SequenceEqual(GlobalHeader))
-            {
-                IsValid = false;
+            _reader = new BinaryReader(File.OpenRead(path));
+            if (_reader.ReadUInt64() != GlobalHeaderValue)
                 return;
-            }
 
-            ProcessFile(reader, false); // Legacy linker data
-            ProcessFile(reader, true);  // Short names
+            // skip over first file containing legacy linker data
+            SkipBytes(48);
+            SkipBytes(ReadSize() + 2);
+            // archive files are aligned to even byte offsets
+            if ((_reader.BaseStream.Position & 1) == 1)
+                SkipBytes(1);
+            ReadSymbolNames();
 
             IsValid = true;
         }
