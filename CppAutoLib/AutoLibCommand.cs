@@ -93,9 +93,9 @@ namespace CppAutoLib
             Instance = new AutoLibCommand(package);
         }
 
-        private String GetMangledName(ErrorItem item)
+        private string GetMangledName(ErrorItem item)
         {
-            String error = item.Description;
+            string error = item.Description;
             if (!error.StartsWith("unresolved external symbol"))
                 return null;
 
@@ -162,6 +162,24 @@ namespace CppAutoLib
                      OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
                 }
             }
+        }
+
+        /// <summary>
+        /// Shows the tool window when the menu item is clicked.
+        /// </summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event args.</param>
+        private void ShowToolWindow()
+        {
+            // Get the instance number 0 of this tool window. This window is single instance so this instance
+            // is actually the only one.
+            // The last flag is set to true so that if the tool window does not exists it will be created.
+            ToolWindowPane window = this.package.FindToolWindow(typeof(AutoLibWindow), 0, true);
+            if (window?.Frame == null)
+                throw new NotSupportedException("Cannot create tool window");
+
+            IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
+            Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
         }
     }
 }
