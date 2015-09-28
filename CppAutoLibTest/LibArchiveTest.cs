@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace CppAutoLibTest
 {
     [TestFixture]
-    class ARArchiveTest 
+    class LibArchiveTest 
     {
         [Test]
         public void TestFTDILib()

@@ -51,9 +51,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="ARArchive.cs" />
     <Compile Include="AutoLibCommand.cs" />
     <Compile Include="AutoLibCommandPackage.cs" />
+    <Compile Include="LibArchive.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
