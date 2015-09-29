@@ -93,48 +93,6 @@ namespace CppAutoLib
             Instance = new AutoLibCommand(package);
         }
 
-        private string GetMangledName(ErrorItem item)
-        {
-            string error = item.Description;
-            if (!error.StartsWith("unresolved external symbol"))
-                return null;
-
-            error = error.Substring(0, error.IndexOf(") referenced in"));
-            error = error.Substring(error.LastIndexOf('(')+1);
-            return error;
-        }
-
-        private Project GetProject(ErrorItem item)
-        {
-            Projects projects = dte.Solution.Projects;
-            for(int i = 1; i <= projects.Count; i++)
-            {
-                if (projects.Item(i).UniqueName == item.Project)
-                    return projects.Item(i);
-            }
-
-            return null;
-        }
-
-        private string[] GetLibDirectories(Project project)
-        {
-            var pr = project.Object as Microsoft.VisualStudio.VCProjectEngine.VCProject;            
-            return pr.ActiveConfiguration.Evaluate("$(LibraryPath)").Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-        }
-
-        private List<string> GetLibraries(Project project)
-        {
-            var ret = new List<string>();
-
-            var directories = GetLibDirectories(project);
-            foreach (var dir in directories)
-            {
-                ret.AddRange(Directory.EnumerateFiles(dir, "*.lib"));
-            }
-
-            return ret;
-        }
-
         /// <summary>
         /// This function is the callback used to execute the command when the menu item is clicked.
         /// See the constructor to see how the menu item is associated with this function using
@@ -144,26 +102,27 @@ namespace CppAutoLib
         /// <param name="e">Event args.</param>
         private void MenuItemCallback(object sender, EventArgs e)
         {
-            var items = dte.ToolWindows.ErrorList.ErrorItems;
-            dte.ExecuteCommand("View.ErrorList", " ");
-            List<MissingSymbol> missing = new List<MissingSymbol>(items.Count);
-            HashSet<string> seenProjects = new HashSet<string>();
-            List<string> allLibraries = new List<string>();
 
-            for (int i = 1; i <= items.Count; i++)
+            var errorListScanner = new ErrorListScanner(dte);
+            var archiveResolution = new LibraryArchiveResolution();
+
+            foreach (var project in errorListScanner.Projects)
             {
-                var mangled = GetMangledName(items.Item(i));
-                var project = GetProject(items.Item(i));
-                missing.Add(new MissingSymbol {MangledName = mangled, Project = project});
-                if (!seenProjects.Contains(project.UniqueName))
+                var archives = archiveResolution.GetLibraryArchives(project);
+                var unresolvedSymbols = errorListScanner.GetUnresolvedSymbols(project);
+
+                var libraryScanner = new LibraryScanner(unresolvedSymbols, archives);
+                libraryScanner.Scan();
+
+                var resolutions = libraryScanner.GetResolutions();
+
+                foreach (var r in resolutions)
                 {
-                    allLibraries.AddRange(GetLibraries(project));
-                    seenProjects.Add(project.UniqueName);
+                    Debug.WriteLine(r.Libraries + " -> " + r.ResolvedSymbols);
                 }
+
             }
 
-            var scanner = new LibraryScanner(missing, allLibraries);
-            // TODO: add events to scanner, give scanner to tool window, start scan and update GUI accordingly
             ToolWindowPane window = this.package.FindToolWindow(typeof (AutoLibWindow), 0, true);
             if (window?.Frame == null)
                 throw new NotSupportedException("Cannot create tool window");

@@ -18,6 +18,12 @@ namespace CppAutoLib
 
         public List<string> MangledNames { get; private set; }
 
+        public string Path { get; }
+        public override string ToString()
+        {
+            return Path;
+        }
+
         private void ReadSymbolNames()
         {
             // skip irrelevant parts of archive file header
@@ -61,6 +67,8 @@ namespace CppAutoLib
 
         public LibArchive(string path)
         {
+            Path = path;
+
             IsValid = false;
             _reader = new BinaryReader(File.OpenRead(path));
             if (_reader.ReadUInt64() != GlobalHeaderValue)

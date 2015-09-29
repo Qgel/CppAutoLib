@@ -58,10 +58,13 @@
       <DependentUpon>AutoLibWindowControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="DisplayItem.cs" />
+    <Compile Include="ErrorListScanner.cs" />
     <Compile Include="LibArchive.cs" />
+    <Compile Include="LibraryArchiveResolution.cs" />
     <Compile Include="LibraryScanner.cs" />
     <Compile Include="MissingSymbol.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resolution.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Key.snk" />
