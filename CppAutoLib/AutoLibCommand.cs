@@ -146,39 +146,29 @@ namespace CppAutoLib
         {
             var items = dte.ToolWindows.ErrorList.ErrorItems;
             dte.ExecuteCommand("View.ErrorList", " ");
+            List<MissingSymbol> missing = new List<MissingSymbol>(items.Count);
+            HashSet<string> seenProjects = new HashSet<string>();
+            List<string> allLibraries = new List<string>();
+
             for (int i = 1; i <= items.Count; i++)
             {
                 var mangled = GetMangledName(items.Item(i));
                 var project = GetProject(items.Item(i));
-                var libs = GetLibraries(project);
-                if (mangled != null)
+                missing.Add(new MissingSymbol {MangledName = mangled, Project = project});
+                if (!seenProjects.Contains(project.UniqueName))
                 {
-                    VsShellUtilities.ShowMessageBox(
-                     this.ServiceProvider,
-                     mangled,
-                     "Item",
-                     OLEMSGICON.OLEMSGICON_INFO,
-                     OLEMSGBUTTON.OLEMSGBUTTON_OK,
-                     OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+                    allLibraries.AddRange(GetLibraries(project));
+                    seenProjects.Add(project.UniqueName);
                 }
             }
-        }
 
-        /// <summary>
-        /// Shows the tool window when the menu item is clicked.
-        /// </summary>
-        /// <param name="sender">The event sender.</param>
-        /// <param name="e">The event args.</param>
-        private void ShowToolWindow()
-        {
-            // Get the instance number 0 of this tool window. This window is single instance so this instance
-            // is actually the only one.
-            // The last flag is set to true so that if the tool window does not exists it will be created.
-            ToolWindowPane window = this.package.FindToolWindow(typeof(AutoLibWindow), 0, true);
+            var scanner = new LibraryScanner(missing, allLibraries);
+            // TODO: add events to scanner, give scanner to tool window, start scan and update GUI accordingly
+            ToolWindowPane window = this.package.FindToolWindow(typeof (AutoLibWindow), 0, true);
             if (window?.Frame == null)
                 throw new NotSupportedException("Cannot create tool window");
 
-            IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
+            IVsWindowFrame windowFrame = (IVsWindowFrame) window.Frame;
             Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
         }
     }

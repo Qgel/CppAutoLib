@@ -24,6 +24,8 @@ namespace CppAutoLib
     [Guid("ef549016-c739-4973-a47b-89d11537901b")]
     public class AutoLibWindow : ToolWindowPane
     {
+        public AutoLibWindowControl WindowControl { get; private set; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AutoLibWindow"/> class.
         /// </summary>
@@ -34,7 +36,7 @@ namespace CppAutoLib
             // This is the user control hosted by the tool window; Note that, even if this class implements IDisposable,
             // we are not calling Dispose on this object. This is because ToolWindowPane calls Dispose on
             // the object returned by the Content property.
-            this.Content = new AutoLibWindowControl();
+            this.Content = (WindowControl = new AutoLibWindowControl());
         }
     }
 }

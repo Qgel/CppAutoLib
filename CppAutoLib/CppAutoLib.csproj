@@ -58,6 +58,8 @@
       <DependentUpon>AutoLibWindowControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="LibArchive.cs" />
+    <Compile Include="LibraryScanner.cs" />
+    <Compile Include="MissingSymbol.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
