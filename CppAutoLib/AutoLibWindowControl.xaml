@@ -7,10 +7,66 @@
              Foreground="{DynamicResource VsBrush.WindowText}"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300"
-             Name="MyToolWindow">
-    <Grid>
-        <StackPanel Orientation="Vertical">
-            <TextBlock Margin="10" HorizontalAlignment="Center">AutoLibWindow</TextBlock>
-        </StackPanel>
+             Name="AutoLibWindow">
+    <UserControl.Resources>
+       <BooleanToVisibilityConverter x:Key="BoolToVis" />
+    </UserControl.Resources>
+    
+    <Grid IsSharedSizeScope="True">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition SharedSizeGroup="AddColumn" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition SharedSizeGroup="ProjectColumn" />
+                <ColumnDefinition SharedSizeGroup="SymbolColumn" />
+            </Grid.ColumnDefinitions>
+            
+            <TextBlock Text="Add" Grid.Column="0" Margin="6,0,6,0" HorizontalAlignment="Left"/>
+            <TextBlock Text="Library" Grid.Column="1" Margin="6,0,0,0" HorizontalAlignment="Left"/>
+            <TextBlock Text="Project" Grid.Column="2" Margin="-3,0,0,0" HorizontalAlignment="Left"/>
+            <TextBlock Text="Symbols" Grid.Column="3" Margin="0,0,0,0" HorizontalAlignment="Left"/>
+        </Grid>
+
+        <ListBox Name="LbLibs" Grid.Row="1" HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="AddColumn" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="ProjectColumn" />
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="SymbolColumn" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                            
+                        <CheckBox IsChecked="{Binding AddLib, Mode=TwoWay}" Grid.Column="0" Grid.Row="0" Margin="3,3,6,6" VerticalAlignment="Center"/>
+                        <ComboBox ItemsSource="{Binding Libraries}" SelectedIndex="0" Grid.Column="1" Grid.Row="0" Margin="0,3,3,6" Height="20" VerticalAlignment="Top" MinWidth="50"/>
+                        <TextBlock Text="{Binding Project}" Margin="6,0,0,6" VerticalAlignment="Center" Grid.Column="2" Grid.Row="0"/>
+                        <Expander Name="exSymbols" FlowDirection="RightToLeft" Grid.Column="3" Grid.Row="0" Margin="6,0,0,6" >
+                            <Expander.Header>
+                                <TextBlock FlowDirection="LeftToRight">
+                                    <Run Text="{Binding SymbolCount, Mode=OneWay}" /> Symbols
+                                </TextBlock>
+                            </Expander.Header>
+                            </Expander>
+
+                        <ListView ItemsSource="{Binding Symbols}" Visibility="{Binding ElementName=exSymbols, Path=IsExpanded, Converter={StaticResource BoolToVis}}" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="3" Margin="0,0,0,3"/>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        
+        <Button Grid.Row="2">
+            <TextBlock Margin="10" HorizontalAlignment="Center">Add Selected Libraries</TextBlock>
+        </Button>
     </Grid>
 </UserControl>

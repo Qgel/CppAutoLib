@@ -4,6 +4,8 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
+using System.Collections.Generic;
+
 namespace CppAutoLib
 {
     using System;
