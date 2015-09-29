@@ -26,7 +26,6 @@ namespace CppAutoLib
         public AutoLibWindowControl()
         {
             this.InitializeComponent();
-
             List<DisplayItem> items = new List<DisplayItem>();
             items.Add(new DisplayItem() { AddLib = true, Libraries = new List<string> { "Lib1", "Lib2" }, Project = "Foo", Symbols = new List<string> { "Sym1", "Sym2", "Sym3" } });
             items.Add(new DisplayItem() { AddLib = true, Libraries = new List<string> { "Lib2", "LibFoo" }, Project="AAAaaasdf fffdsf", Symbols = new List<string> { "void* foo(int)", "Sym2", "Sym3" } });

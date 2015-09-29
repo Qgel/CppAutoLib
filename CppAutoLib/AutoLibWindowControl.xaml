@@ -64,9 +64,24 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        
-        <Button Grid.Row="2">
-            <TextBlock Margin="10" HorizontalAlignment="Center">Add Selected Libraries</TextBlock>
-        </Button>
+
+        <Grid Grid.Row="2" Background="{DynamicResource VsBrush.Window}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Horizontal" Grid.Column="0" HorizontalAlignment="Left">
+                <Button Margin="3" Grid.Column="1">
+                    <TextBlock Margin="5,3,5,3" HorizontalAlignment="Center">Select All</TextBlock>
+                </Button>
+                <Button Margin="3" Grid.Column="1">
+                    <TextBlock Margin="5,3,5,3" HorizontalAlignment="Center">Clear All</TextBlock>
+                </Button>
+            </StackPanel>
+            <Button Margin="3" Grid.Column="1" HorizontalAlignment="Right">
+                <TextBlock Margin="5,3,5,3" HorizontalAlignment="Center">Add Selected Libraries</TextBlock>
+            </Button>
+        </Grid>
+
     </Grid>
 </UserControl>
