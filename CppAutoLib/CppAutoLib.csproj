@@ -57,6 +57,7 @@
     <Compile Include="AutoLibWindowControl.xaml.cs">
       <DependentUpon>AutoLibWindowControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DisplayItem.cs" />
     <Compile Include="LibArchive.cs" />
     <Compile Include="LibraryScanner.cs" />
     <Compile Include="MissingSymbol.cs" />
