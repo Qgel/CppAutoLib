@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:cppAutoLib="clr-namespace:CppAutoLib"
              Background="{DynamicResource VsBrush.Window}"
              Foreground="{DynamicResource VsBrush.WindowText}"
              mc:Ignorable="d"
@@ -72,14 +73,23 @@
             </Grid.ColumnDefinitions>
             <StackPanel Orientation="Horizontal" Grid.Column="0" HorizontalAlignment="Left">
                 <Button Margin="3" Grid.Column="1">
-                    <TextBlock Margin="5,3,5,3" HorizontalAlignment="Center">Select All</TextBlock>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Margin="5,0,5,0" Source="Resources/select.png" />
+                        <TextBlock Margin="0,3,5,3" HorizontalAlignment="Center">Select All</TextBlock>
+                    </StackPanel>
                 </Button>
                 <Button Margin="3" Grid.Column="1">
-                    <TextBlock Margin="5,3,5,3" HorizontalAlignment="Center">Clear All</TextBlock>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Margin="5,0,5,0" Source="Resources/clear.png" />
+                        <TextBlock Margin="0,3,5,3" HorizontalAlignment="Center">Clear All</TextBlock>
+                    </StackPanel>
                 </Button>
             </StackPanel>
             <Button Margin="3" Grid.Column="1" HorizontalAlignment="Right">
-                <TextBlock Margin="5,3,5,3" HorizontalAlignment="Center">Add Selected Libraries</TextBlock>
+                <StackPanel Orientation="Horizontal">
+                    <Image Margin="5,0,5,0" Source="Resources/add.png" />
+                    <TextBlock Margin="0,3,5,3" HorizontalAlignment="Center">Add Selected Libraries</TextBlock>
+                </StackPanel>
             </Button>
         </Grid>
 

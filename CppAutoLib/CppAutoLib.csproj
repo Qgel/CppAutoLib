@@ -75,8 +75,11 @@
       <ResourceName>Menus.ctmenu</ResourceName>
     </VSCTCompile>
     <Content Include="index.html" />
+    <Resource Include="Resources\clear.png" />
+    <Resource Include="Resources\add.png" />
     <Content Include="Resources\Command1.png" />
     <Content Include="Resources\Command1Package.ico" />
+    <Resource Include="Resources\select.png" />
     <Content Include="stylesheet.css" />
   </ItemGroup>
   <ItemGroup>
