@@ -78,8 +78,8 @@ namespace CppAutoLib
             if (!error.StartsWith("unresolved external symbol"))
                 return null;
 
-            error = error.Substring(0, error.LastIndexOf(")", StringComparison.Ordinal));
-            error = error.Substring(error.LastIndexOf('(') + 1);
+            error = error.Substring(error.IndexOf("\" (") + 3);
+            error = error.Substring(0, error.IndexOf(')'));
             return error;
         }
 
