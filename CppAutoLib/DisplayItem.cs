@@ -1,11 +1,9 @@
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using CppAutoLib.Annotations;
-using EnvDTE;
 
 namespace CppAutoLib
 {

@@ -5,16 +5,11 @@
 //------------------------------------------------------------------------------
 
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using EnvDTE;
-using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.VisualStudio.VCProjectEngine;
 
 namespace CppAutoLib
 {
-    using System.Diagnostics.CodeAnalysis;
     using System.Windows;
     using System.Windows.Controls;
 

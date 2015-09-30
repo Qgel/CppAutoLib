@@ -6,13 +6,9 @@
 
 using System;
 using System.ComponentModel.Design;
-using System.Globalization;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using EnvDTE80;
-using EnvDTE;
-using System.Diagnostics;
-using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -38,7 +34,7 @@ namespace CppAutoLib
         /// </summary>
         private readonly Package package;
 
-        private readonly DTE2 dte;
+        private readonly DTE2 _dte;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AutoLibCommand"/> class.
@@ -62,7 +58,7 @@ namespace CppAutoLib
                 commandService.AddCommand(menuItem);
             }
 
-            this.dte = (EnvDTE80.DTE2)Package.GetGlobalService(typeof(EnvDTE.DTE));
+            this._dte = (EnvDTE80.DTE2)Package.GetGlobalService(typeof(EnvDTE.DTE));
         }
 
         /// <summary>
@@ -103,7 +99,7 @@ namespace CppAutoLib
         /// <param name="e">Event args.</param>
         private void MenuItemCallback(object sender, EventArgs e)
         {
-            var errorListScanner = new ErrorListScanner(dte);
+            var errorListScanner = new ErrorListScanner(_dte);
             var archiveResolution = new LibraryArchiveResolution();
 
             var statusBar = ServiceProvider.GetService(typeof(SVsStatusbar)) as IVsStatusbar;
@@ -122,7 +118,7 @@ namespace CppAutoLib
                 allUnresolved.AddRange(libraryScanner.GetUnresolvedSymbols());
             }
 
-            AutoLibWindow window = this.package.FindToolWindow(typeof (AutoLibWindow), 0, true) as AutoLibWindow;
+            AutoLibWindow window = package.FindToolWindow(typeof (AutoLibWindow), 0, true) as AutoLibWindow;
             if (window?.Frame == null)
                 throw new NotSupportedException("Cannot create tool window");
 
