@@ -21,6 +21,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
+        <!-- Header -->
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition SharedSizeGroup="AddColumn" />
@@ -31,14 +32,16 @@
             
             <TextBlock Text="Add" Grid.Column="0" Margin="6,0,6,0" HorizontalAlignment="Left"/>
             <TextBlock Text="Library" Grid.Column="1" Margin="6,0,0,0" HorizontalAlignment="Left"/>
-            <TextBlock Text="Project" Grid.Column="2" Margin="-3,0,0,0" HorizontalAlignment="Left"/>
-            <TextBlock Text="Symbols" Grid.Column="3" Margin="0,0,0,0" HorizontalAlignment="Left"/>
+            <TextBlock Text="Project" Grid.Column="2" Margin="-3,0,0,0" HorizontalAlignment="Left" MinWidth="40"/>
+            <TextBlock Text="Symbols" Grid.Column="3" Margin="0,0,0,0" HorizontalAlignment="Left" MinWidth="60"/>
         </Grid>
 
-        <ListBox Name="LbLibs" Grid.Row="1" HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
+        <!-- ListBox of resolution proposals -->
+        <ListBox Name="LbLibs" Grid.Row="1" Margin="-1, 3, -1, 0" HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Grid>
+                        <!-- Columns share size with the header and all items in the list -->
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" SharedSizeGroup="AddColumn" />
                             <ColumnDefinition Width="*" />
@@ -49,10 +52,17 @@
                             <RowDefinition />
                             <RowDefinition />
                         </Grid.RowDefinitions>
-                            
+                         
+                        <!-- Checkbox to choose whether to add this .lib to the project -->
                         <CheckBox IsChecked="{Binding AddLib, Mode=TwoWay}" Grid.Column="0" Grid.Row="0" Margin="3,3,6,6" VerticalAlignment="Center"/>
+                        
+                        <!-- Combo of all .libs that resolve the symbols -->
                         <ComboBox ItemsSource="{Binding Libraries}" SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}" Grid.Column="1" Grid.Row="0" Margin="0,3,3,6" Height="20" VerticalAlignment="Top" MinWidth="50"/>
+                        
+                        <!-- Name of the Project of the resolution -->
                         <TextBlock Text="{Binding Project}" MinWidth="40" Margin="6,0,0,6" VerticalAlignment="Center" Grid.Column="2" Grid.Row="0"/>
+                        
+                        <!-- Expander for resolved symbols -->
                         <Expander Name="exSymbols" FlowDirection="RightToLeft" Grid.Column="3" Grid.Row="0" Margin="6,0,0,6" >
                             <Expander.Header>
                                 <TextBlock FlowDirection="LeftToRight">
@@ -61,12 +71,21 @@
                             </Expander.Header>
                             </Expander>
 
-                        <ListView ItemsSource="{Binding Symbols}" Visibility="{Binding ElementName=exSymbols, Path=IsExpanded, Converter={StaticResource BoolToVis}}" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="3" Margin="0,0,0,3"/>
+                        <!-- Expandable list of symbols resolved by this resolution -->
+                        <ListView ItemsSource="{Binding Symbols}" Visibility="{Binding ElementName=exSymbols, Path=IsExpanded, Converter={StaticResource BoolToVis}}" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="3" Margin="0,0,0,3">
+                            <!-- Disable selection of symbols -->
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="Focusable" Value="false"/>
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                        </ListView>
                     </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
 
+        <!-- Warning label in case there were some unresolved symbols -->
         <StackPanel Background="Yellow"  Margin="0, 5, 0, 5" Orientation="Horizontal" Grid.Row="2" Name="UnresolvedWarning" HorizontalAlignment="Stretch" Visibility="Collapsed" >
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <Image Source="Resources/Error.png" />
@@ -74,6 +93,7 @@
             </StackPanel>
           </StackPanel>
 
+        <!-- Buttons -->
         <Grid Grid.Row="3" Background="{DynamicResource VsBrush.Window}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
