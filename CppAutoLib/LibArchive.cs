@@ -15,8 +15,7 @@ namespace CppAutoLib
         private readonly BinaryReader _reader;
 
         public bool IsValid { get; private set; }
-
-        public List<string> MangledNames { get; private set; }
+        public HashSet<string> MangledNames { get; private set; } 
 
         public string Path { get; }
         public override string ToString()
@@ -42,7 +41,7 @@ namespace CppAutoLib
             var rawSymbolNames = _reader.ReadBytes(size);
 
             // read symbol names as 0-terminated c strings from rawSymbolNames
-            MangledNames = new List<string>(symbolCount);
+            MangledNames = new HashSet<string>();
             var curString = new StringBuilder();
             int p = 0;
             for (int i = 0; i < symbolCount; i++)

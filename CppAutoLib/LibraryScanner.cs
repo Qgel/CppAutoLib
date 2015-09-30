@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using EnvDTE;
+using Microsoft.VisualStudio.Shell.Interop;
 
 namespace CppAutoLib
 {
@@ -48,13 +50,13 @@ namespace CppAutoLib
         /// Return computed resoltions
         /// </summary>
         /// <returns>computed resolutions</returns>
-        public List<Resolution> GetResolutions()
+        public List<Resolution> GetResolutions(Project project)
         {
             List<Resolution> resolutions = new List<Resolution>();
 
             foreach (var prop in _resolutionProposals)
             {
-                resolutions.Add(new Resolution(prop.Key, prop.Value));
+                resolutions.Add(new Resolution(project, prop.Key, prop.Value));
             }
 
             return resolutions;
@@ -75,26 +77,24 @@ namespace CppAutoLib
             Libraries = libraries;
         }
 
-        public void Scan()
+        public void Scan(IVsStatusbar statusBar)
         {
-            HandleScan();
-            //ThreadPool.QueueUserWorkItem(ign => HandleScan());
-        }
-
-        
-        private void HandleScan()
-        {
+            int frozen;
+            statusBar.IsFrozen(out frozen);
 
             foreach (var symbol in MissingSymbols)
             {
+                if (frozen == 0)
+                    statusBar.SetText("Searching " + symbol);
+
                 var containingArchives = new List<LibArchive>();
                 foreach (var lib in Libraries)
                 {
                     if (!lib.IsValid)
                         continue;
 
-                    if (lib.MangledNames.BinarySearch(symbol) >= 0)
-                        containingArchives.Add(lib);                    
+                    if (lib.MangledNames.Contains(symbol))
+                        containingArchives.Add(lib);
                 }
                 if (containingArchives.Count > 0)
                 {
@@ -104,6 +104,15 @@ namespace CppAutoLib
                 {
                     _unresolvedSymbols.Add(symbol);
                 }
+            }
+
+            if (frozen == 0)
+            {
+                if (_unresolvedSymbols.Count > 0)
+                    statusBar.SetText("Search finished, still " + _unresolvedSymbols.Count + " unresolved symbols");
+                else
+                    statusBar.SetText("Search finished, all symbols resolved");
+                statusBar.Clear();
             }
         }
 

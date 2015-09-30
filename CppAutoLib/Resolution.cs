@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using EnvDTE;
 
 namespace CppAutoLib
 {
@@ -22,10 +23,13 @@ namespace CppAutoLib
             
         }
 
-        public Resolution(List<LibArchive> libraries, List<string> resolvedSymbols)
+        public Project Project { get; }
+
+        public Resolution(Project project, List<LibArchive> libraries, List<string> resolvedSymbols)
         {
             Libraries = libraries;
             ResolvedSymbols = resolvedSymbols;
+            Project = project;
         }
     }
 }

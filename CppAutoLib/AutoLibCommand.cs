@@ -14,6 +14,7 @@ using EnvDTE;
 using System.Diagnostics;
 using System.IO;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CppAutoLib
 {
@@ -102,32 +103,34 @@ namespace CppAutoLib
         /// <param name="e">Event args.</param>
         private void MenuItemCallback(object sender, EventArgs e)
         {
-
             var errorListScanner = new ErrorListScanner(dte);
             var archiveResolution = new LibraryArchiveResolution();
 
+            var statusBar = ServiceProvider.GetService(typeof(SVsStatusbar)) as IVsStatusbar;
+            var allResolutions = new List<Resolution>();
+            var allUnresolved = new List<string>();
+
             foreach (var project in errorListScanner.Projects)
             {
-                var archives = archiveResolution.GetLibraryArchives(project);
+                var archives = archiveResolution.GetLibraryArchives(project, statusBar);
                 var unresolvedSymbols = errorListScanner.GetUnresolvedSymbols(project);
 
                 var libraryScanner = new LibraryScanner(unresolvedSymbols, archives);
-                libraryScanner.Scan();
+                libraryScanner.Scan(statusBar);
 
-                var resolutions = libraryScanner.GetResolutions();
-
-                foreach (var r in resolutions)
-                {
-                    Debug.WriteLine(r.Libraries + " -> " + r.ResolvedSymbols);
-                }
-
+                allResolutions.AddRange(libraryScanner.GetResolutions(project));
+                allUnresolved.AddRange(libraryScanner.GetUnresolvedSymbols());
             }
 
-            ToolWindowPane window = this.package.FindToolWindow(typeof (AutoLibWindow), 0, true);
+            AutoLibWindow window = this.package.FindToolWindow(typeof (AutoLibWindow), 0, true) as AutoLibWindow;
             if (window?.Frame == null)
                 throw new NotSupportedException("Cannot create tool window");
 
+            window.WindowControl.SetItemSource(allResolutions.Select(DisplayItem.Create).ToList());
+            window.WindowControl.SetUnresolved(allUnresolved);
+
             IVsWindowFrame windowFrame = (IVsWindowFrame) window.Frame;
+            window.WindowControl.SetFrame(windowFrame);
             Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
         }
     }

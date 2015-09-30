@@ -59,10 +59,12 @@
     </Compile>
     <Compile Include="DisplayItem.cs" />
     <Compile Include="ErrorListScanner.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="LibArchive.cs" />
     <Compile Include="LibraryArchiveResolution.cs" />
     <Compile Include="LibraryScanner.cs" />
     <Compile Include="MissingSymbol.cs" />
+    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resolution.cs" />
   </ItemGroup>
@@ -83,6 +85,7 @@
     <Content Include="Resources\Command1.png" />
     <Content Include="Resources\Command1Package.ico" />
     <Resource Include="Resources\select.png" />
+    <Resource Include="Resources\Error.png" />
     <Content Include="stylesheet.css" />
   </ItemGroup>
   <ItemGroup>

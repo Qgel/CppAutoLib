@@ -5,6 +5,7 @@
 //------------------------------------------------------------------------------
 
 using System.Collections.Generic;
+using Microsoft.VisualStudio.Shell.Interop;
 
 namespace CppAutoLib
 {
