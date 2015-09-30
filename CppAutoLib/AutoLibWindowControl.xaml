@@ -11,6 +11,7 @@
              Name="AutoLibWindow">
     <UserControl.Resources>
        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+        <cppAutoLib:MultipleElementsToEnabledConverter x:Key="MultipleElementsToEnabled" />
     </UserControl.Resources>
     
     <Grid IsSharedSizeScope="True">
@@ -57,7 +58,7 @@
                         <CheckBox IsChecked="{Binding AddLib, Mode=TwoWay}" Grid.Column="0" Grid.Row="0" Margin="3,3,6,6" VerticalAlignment="Center"/>
                         
                         <!-- Combo of all .libs that resolve the symbols -->
-                        <ComboBox ItemsSource="{Binding Libraries}" SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}" Grid.Column="1" Grid.Row="0" Margin="0,3,3,6" Height="20" VerticalAlignment="Top" MinWidth="50"/>
+                        <ComboBox ItemsSource="{Binding Libraries}" IsEnabled="{Binding Libraries, Converter={StaticResource MultipleElementsToEnabled}, Mode=OneTime}" SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}" Grid.Column="1" Grid.Row="0" Margin="0,3,3,6" Height="20" VerticalAlignment="Top" MinWidth="50"/>
                         
                         <!-- Name of the Project of the resolution -->
                         <TextBlock Text="{Binding Project}" MinWidth="40" Margin="6,0,0,6" VerticalAlignment="Center" Grid.Column="2" Grid.Row="0"/>
