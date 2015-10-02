@@ -69,20 +69,34 @@
     <Compile Include="Resolution.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\results.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <None Include="Key.snk" />
+    <Content Include="..\LICENSE">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <None Include="packages.config" />
+    <Content Include="..\README.md">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\lib.png" />
+    <Content Include="Resources\lib.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <VSCTCompile Include="AutoLibCommandPackage.vsct">
       <ResourceName>Menus.ctmenu</ResourceName>
     </VSCTCompile>
     <Resource Include="Resources\clear.png" />
     <Resource Include="Resources\add.png" />
-    <Content Include="Resources\Command1.png" />
     <Content Include="Resources\Command1Package.ico" />
     <Resource Include="Resources\select.png" />
     <Resource Include="Resources\Error.png" />

@@ -1,9 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="CppAutoLib.Company.f0687398-543e-404c-8547-e12defc45e35" Version="1.0" Language="en-US" Publisher="Company" />
+    <Identity Id="CppAutoLib.Company.f0687398-543e-404c-8547-e12defc45e35" Version="1.0" Language="en-US" Publisher="GalaXIs" />
     <DisplayName>CppAutoLib</DisplayName>
-    <Description>Empty VSIX Project.</Description>
+    <Description xml:space="preserve">Automatically resolve missing linker inputs in C++</Description>
+    <MoreInfo>https://github.com/Qgel/CppAutoLib</MoreInfo>
+    <License>LICENSE</License>
+    <GettingStartedGuide>README.md</GettingStartedGuide>
+    <Icon>lib.png</Icon>
+    <PreviewImage>results.png</PreviewImage>
   </Metadata>
   <Installation>
     <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[14.0]" />
