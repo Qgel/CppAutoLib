@@ -20,6 +20,10 @@ CppAutoLib automatically rebuilds the project afterwards.
 
 ![Successful build](happybuild.png)
 
+# Get
+
+You can download a prebuilt VSIX package on the [https://github.com/Qgel/CppAutoLib/releases](releases) page.
+
 # License
 
 BSD
