@@ -22,7 +22,7 @@ CppAutoLib automatically rebuilds the project afterwards.
 
 # Get
 
-You can download a prebuilt VSIX package on the [https://github.com/Qgel/CppAutoLib/releases](releases) page.
+You can download a prebuilt VSIX package on the [releases](https://github.com/Qgel/CppAutoLib/releases) page.
 
 # License
 
